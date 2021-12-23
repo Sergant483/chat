@@ -5,7 +5,7 @@ import com.senla.chat.di.ApplicationComponent
 import com.senla.chat.di.DaggerApplicationComponent
 
 class App : Application() {
-    private lateinit var appComponent: ApplicationComponent
+    lateinit var appComponent: ApplicationComponent
 
     override fun onCreate() {
         super.onCreate()
