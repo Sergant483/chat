@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_small">6dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_huge">26dp</dimen>
+
+    <dimen name="chat_message_radius">14dp</dimen>
+    <dimen name="chat_message_text_size">16sp</dimen>
+    <dimen name="chat_message_padding">6dp</dimen>
+    <dimen name="chat_message_side_margin">36dp</dimen>
+</resources>
