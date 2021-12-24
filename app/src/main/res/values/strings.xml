@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">chat</string>
+    <string name="your_gender">Your gender</string>
+    <string name="other_gender">Other person gender</string>
+    <string name="man">Man</string>
+    <string name="woman">Woman</string>
+    <string name="less_than_18">Less than 18</string>
+    <string name="age_18_25">18 - 25</string>
+    <string name="age_25_35">25 - 35</string>
+    <string name="age_bigger_35">More than 35</string>
+    <string name="start_chat">Start chat</string>
+    <string name="other_person_gender">Other person gender</string>
+    <string name="your_age">Your age</string>
+    <string name="other_person_age">Other person age</string>
 </resources>
