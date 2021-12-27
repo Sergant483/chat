@@ -11,13 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.senla.chat.App
 import com.senla.chat.R
-import com.senla.chat.databinding.TermsFragmentBinding
+import com.senla.chat.databinding.FragmentTermsBinding
 import com.senla.chat.models.Gender
 import com.senla.chat.models.SearchTerms
 import javax.inject.Inject
 
 class TermsFragment : Fragment() {
-    private var _binding: TermsFragmentBinding? = null
+    private var _binding: FragmentTermsBinding? = null
     private val binding get() = _binding!!
     private var searchTerms: SearchTerms =
         SearchTerms(
@@ -41,7 +41,7 @@ class TermsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = TermsFragmentBinding.inflate(inflater, container, false)
+        _binding = FragmentTermsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
