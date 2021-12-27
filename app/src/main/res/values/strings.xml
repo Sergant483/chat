@@ -12,4 +12,9 @@
     <string name="other_person_gender">Other person gender</string>
     <string name="your_age">Your age</string>
     <string name="other_person_age">Other person age</string>
+    <string name="repeat">Повторить</string>
+    <string name="change_choice">Изменить критерии</string>
+    <string name="loading_custom_dialog_text_view">Упс... Что-то пошло не так, попробуйте повторить запрос, или изменить критерии выбора.</string>
+    <string name="loading_custom_dialog_heading_text_view">ОШИБКА!</string>
+    <string name="loading_custom_progress_text_view">Подождите, \nидет поиск собеседника</string>
 </resources>
