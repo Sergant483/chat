@@ -4,22 +4,22 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class SearchTerms(
-    var yourGender: String,
+    var yourGender: Gender,
     var yourAge: Array<Int>,
-    var otherPersonGender: String,
+    var otherPersonGender: Gender,
     var otherPersonAge: Array<Int>
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
+        parcel.readSerializable() as Gender ,
         parcel.readArray(Int::class.java.classLoader) as Array<Int>,
-        parcel.readString()!!,
+        parcel.readSerializable() as Gender,
         parcel.readArray(Int::class.java.classLoader) as Array<Int>
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(yourGender)
-        parcel.writeString(otherPersonGender)
+        parcel.writeSerializable(yourGender)
+        parcel.writeSerializable(otherPersonGender)
     }
 
     override fun describeContents(): Int {

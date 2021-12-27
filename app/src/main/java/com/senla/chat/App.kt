@@ -13,6 +13,6 @@ class App : Application() {
     }
 
     private fun initDI() {
-        appComponent = DaggerApplicationComponent.create()
+        appComponent = DaggerApplicationComponent.factory().create(applicationContext)
     }
 }

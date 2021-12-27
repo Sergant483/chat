@@ -1,6 +1,6 @@
 package com.senla.chat.models
 
-enum class Gender {
-    MAN,
-    WOMAN
+enum class Gender(val gender:String) {
+    MAN("man"),
+    WOMAN("woman")
 }

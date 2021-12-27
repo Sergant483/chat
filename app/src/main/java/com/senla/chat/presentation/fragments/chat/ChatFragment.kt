@@ -1,29 +1,33 @@
 package com.senla.chat.presentation.fragments.chat
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.senla.chat.App
 import com.senla.chat.databinding.ChatFragmentBinding
 import com.senla.chat.models.SearchTerms
 import com.senla.chat.presentation.fragments.terms.TermsFragment
+import com.senla.chat.presentation.fragments.terms.TermsViewModel
 import javax.inject.Inject
 
 class ChatFragment : Fragment() {
     private var _binding: ChatFragmentBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: ChatViewModel
-    @Inject
-    lateinit var viewModelFactory: ChatViewModelFactory
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (requireActivity().applicationContext as App).appComponent.inject(this)
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel by viewModels<TermsViewModel> { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as App).appComponent.chatComponent()
+            .create().inject(this)
     }
 
     override fun onCreateView(
@@ -36,9 +40,9 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this,viewModelFactory).get(ChatViewModel::class.java)
-        val searchTerms = arguments?.getParcelable<SearchTerms>(TermsFragment.BUNDLE_KEY)
-        Log.e("TAGG",searchTerms.toString())
+        val searchTerms =
+            arguments?.getParcelable<SearchTerms>(TermsFragment.SEARCH_TERMS_BUNDLE_KEY)
+        Log.e("TAGG", searchTerms.toString())
     }
 
     override fun onDestroyView() {
@@ -46,10 +50,4 @@ class ChatFragment : Fragment() {
         _binding = null
     }
 
-}
-
-class ChatViewModelFactory() : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ChatViewModel() as T
-    }
 }
