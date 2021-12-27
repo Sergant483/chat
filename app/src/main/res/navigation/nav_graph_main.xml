@@ -8,5 +8,5 @@
         android:id="@+id/termsFragment"
         android:name="com.senla.chat.presentation.fragments.terms.TermsFragment"
         android:label="terms_fragment"
-        tools:layout="@layout/terms_fragment" />
+        tools:layout="@layout/fragment_terms" />
 </navigation>
