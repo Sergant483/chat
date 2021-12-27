@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:gravity="center"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_custom_dialog_heading_text_view"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/tv_custom_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_custom_dialog_text_view"
+        android:layout_marginTop="10dp"
+        android:textSize="14dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_repeat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/repeat"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"
+            android:background="@color/purple_200"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_change_choice"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/change_choice"
+            android:padding="10dp"
+            android:layout_margin="5dp"
+            android:textColor="@color/white"
+            android:background="@drawable/background_button"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</LinearLayout>
