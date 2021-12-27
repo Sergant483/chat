@@ -37,7 +37,7 @@ class TermsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get(TermsViewModel::class.java)
-        binding.text.setText(viewModel.trololo.value)
+
 
     }
 

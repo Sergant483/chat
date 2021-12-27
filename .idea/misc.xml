@@ -3,9 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/chat/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
-        <entry key="..\:/chat/app/src/main/res/layout/chat_fragment.xml" value="0.20520833333333333" />
-        <entry key="..\:/chat/app/src/main/res/layout/terms_fragment.xml" value="0.36666666666666664" />
+        <entry key="../../../../layout/custom_preview.xml" value="0.21510416666666668" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/drawable/background_button.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/drawable/background_loading_custom_dialog.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/drawable/ic_background_loading_custom_dialog.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/layout/custom_dialog.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/dialog_custom.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/dialog_custom_progress.xml" value="0.33" />
       </map>
     </option>
   </component>
