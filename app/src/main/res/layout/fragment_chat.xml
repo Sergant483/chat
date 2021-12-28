@@ -6,56 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragments.chat.ChatFragment">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvChatAvatar"
-        style="@style/ChatAvatarText"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
-        app:layout_constraintBottom_toBottomOf="@+id/cvChatAvatar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cvChatAvatar"
-        app:layout_constraintTop_toTopOf="@+id/cvChatAvatar"
-        tools:text="Иннокентий Валерьянович" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvChatAvatar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        app:cardCornerRadius="@dimen/chat_avatar_radius"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/ivChatAvatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:src="@drawable/ic_launcher_background"
-            android:contentDescription="@string/chat_avatar" />
-
-    </androidx.cardview.widget.CardView>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChat"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tvChatAvatar"
-        app:layout_constraintStart_toStartOf="@+id/cvChatAvatar"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintBottom_toTopOf="@id/inputMessage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf= "parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+    <EditText
+        android:id="@+id/inputMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_chat_input"
+        android:hint="@string/type_a_message"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:paddingStart="@dimen/margin_16dp"
+        android:paddingEnd="@dimen/margin_16dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/rvChat"
+        app:layout_constraintEnd_toStartOf="@id/button_send"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/button_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1" />
+        android:layout_marginStart="@dimen/margin_4dp"
+        android:layout_marginLeft="@dimen/margin_4dp"
+        android:padding="@dimen/margin_8dp"
+        android:src="@drawable/ic_send"
+        app:tint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvChat"
+        app:layout_constraintStart_toEndOf="@id/inputMessage"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,15 @@
 package com.senla.chat.di
 
 import android.content.Context
+import com.google.firebase.firestore.FirebaseFirestore
 import com.senla.chat.di.chat.ChatComponent
 import com.senla.chat.di.terms.TermsComponent
+import com.senla.chat.presentation.fragments.utils.PreferenceManager
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
 
 @Component(
@@ -26,7 +30,12 @@ interface ApplicationComponent {
     fun chatComponent(): ChatComponent.Factory
 
     @Module
-    class AppModule {}
+    class AppModule {
+
+        @Provides
+        fun provideFirebase(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    }
 }
 
 @Module(

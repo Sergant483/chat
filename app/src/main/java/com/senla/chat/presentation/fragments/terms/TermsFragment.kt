@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.senla.chat.App
 import com.senla.chat.R
 import com.senla.chat.databinding.FragmentTermsBinding
+import com.senla.chat.models.AgeTerms
 import com.senla.chat.models.Gender
 import com.senla.chat.models.SearchTerms
 import javax.inject.Inject
@@ -21,10 +22,10 @@ class TermsFragment : Fragment() {
     private val binding get() = _binding!!
     private var searchTerms: SearchTerms =
         SearchTerms(
-            yourGender = Gender.MAN,
-            yourAge = arrayOf(0, 18),
-            otherPersonGender = Gender.MAN,
-            otherPersonAge = arrayOf(0, 18)
+            yourGender = Gender.MAN.gender,
+            yourAge = AgeTerms.SMALL.ordinal,
+            otherPersonGender = Gender.MAN.gender,
+            otherPersonAge = AgeTerms.SMALL.ordinal
         )
 
     @Inject
@@ -61,62 +62,62 @@ class TermsFragment : Fragment() {
         binding.includeYourInfo.personGenderManButton.setOnClickListener {
             cleanYourGender()
             it.isSelected = true
-            searchTerms.yourGender = Gender.MAN
+            searchTerms.yourGender = Gender.MAN.gender
         }
         binding.includeYourInfo.personGenderWomanButton.setOnClickListener {
             cleanYourGender()
             it.isSelected = true
-            searchTerms.yourGender = Gender.WOMAN
+            searchTerms.yourGender = Gender.WOMAN.gender
         }
         binding.includeOtherPerson.personGenderManButton.setOnClickListener {
             cleanOtherPersonGender()
             it.isSelected = true
-            searchTerms.otherPersonGender = Gender.MAN
+            searchTerms.otherPersonGender = Gender.MAN.gender
         }
         binding.includeOtherPerson.personGenderWomanButton.setOnClickListener {
             cleanOtherPersonGender()
             it.isSelected = true
-            searchTerms.otherPersonGender = Gender.WOMAN
+            searchTerms.otherPersonGender = Gender.WOMAN.gender
         }
         binding.includeOtherPerson.person18Button.setOnClickListener {
             cleanOtherPersonAge()
             it.isSelected = true
-            searchTerms.otherPersonAge = arrayOf(0, 18)
+            searchTerms.otherPersonAge = AgeTerms.SMALL.ordinal
         }
         binding.includeOtherPerson.personAge1825Button.setOnClickListener {
             cleanOtherPersonAge()
             it.isSelected = true
-            searchTerms.otherPersonAge = arrayOf(18, 25)
+            searchTerms.otherPersonAge = AgeTerms.YOUNG.ordinal
         }
         binding.includeOtherPerson.personAge2535Button.setOnClickListener {
             cleanOtherPersonAge()
             it.isSelected = true
-            searchTerms.otherPersonAge = arrayOf(25, 35)
+            searchTerms.otherPersonAge = AgeTerms.MEDIUM.ordinal
         }
         binding.includeOtherPerson.personAgeBigger35Button.setOnClickListener {
             cleanOtherPersonAge()
             it.isSelected = true
-            searchTerms.otherPersonAge = arrayOf(35, 100)
+            searchTerms.otherPersonAge = AgeTerms.OLD.ordinal
         }
         binding.includeYourInfo.person18Button.setOnClickListener {
             cleanYourAge()
             it.isSelected = true
-            searchTerms.yourAge = arrayOf(0, 18)
+            searchTerms.yourAge = AgeTerms.SMALL.ordinal
         }
         binding.includeYourInfo.personAge1825Button.setOnClickListener {
             cleanYourAge()
             it.isSelected = true
-            searchTerms.yourAge = arrayOf(18, 25)
+            searchTerms.yourAge =  AgeTerms.YOUNG.ordinal
         }
         binding.includeYourInfo.personAge2535Button.setOnClickListener {
             cleanYourAge()
             it.isSelected = true
-            searchTerms.yourAge = arrayOf(25, 35)
+            searchTerms.yourAge =  AgeTerms.MEDIUM.ordinal
         }
         binding.includeYourInfo.personAgeBigger35Button.setOnClickListener {
             cleanYourAge()
             it.isSelected = true
-            searchTerms.yourAge = arrayOf(35, 100)
+            searchTerms.yourAge =  AgeTerms.OLD.ordinal
         }
         binding.startChatButton.setOnClickListener {
             val bundle = Bundle()

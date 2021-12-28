@@ -6,17 +6,21 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.senla.chat.R
-import com.senla.chat.model.ChatMessageDto
+import com.senla.chat.model.ChatMessage
+import com.senla.chat.model.ChatMessag
 
 class ChatRecyclerViewAdapter(
-    private var messages: List<ChatMessageDto> = listOf()
+    var messages: List<ChatMessage> = listOf(),
+    private val id:String
 ) : RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder>() {
 
-    companion object {
-        const val MESSAGE_OWNER_ME = 0L
-        private const val VIEW_TYPE_MY_MESSAGE = 0
-        private const val VIEW_TYPE_COMPANION_MESSAGE = 1
+    fun updateMessagesList(messages: List<ChatMessage>?) {
+        messages?.let {
+            this.messages = it
+            notifyDataSetChanged()
+        }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,28 +37,27 @@ class ChatRecyclerViewAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (messages[position].authorId == MESSAGE_OWNER_ME) {
-            VIEW_TYPE_MY_MESSAGE
-        } else {
+        return if (messages[position].senderId == id) {
             VIEW_TYPE_COMPANION_MESSAGE
+        } else {
+            VIEW_TYPE_MY_MESSAGE
         }
     }
 
     override fun getItemCount() = messages.size
 
-    fun updateMessagesList(messages: List<ChatMessageDto>?) {
-        messages?.let {
-            this.messages = it
-            notifyDataSetChanged()
-        }
-    }
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val message: TextView = view.findViewById(R.id.tvMessage)
 
-        fun bind(chatMessageDto: ChatMessageDto?) {
-            chatMessageDto?.let { message.text = it.message }
+        fun bind(chatMessage: ChatMessage?) {
+            chatMessage?.let { message.text = it.message }
         }
     }
+
+    companion object {
+        private const val VIEW_TYPE_MY_MESSAGE = 0
+        private const val VIEW_TYPE_COMPANION_MESSAGE = 1
+    }
+
 }

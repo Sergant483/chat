@@ -1,6 +1,6 @@
 package com.senla.chat.model
 
-data class ChatMessageDto(
-    val authorId: Long?,
+data class ChatMessag(
+    val authorId: String,
     val message: String?
 )

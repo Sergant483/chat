@@ -8,12 +8,12 @@
     <TextView
         android:id="@+id/tvMessage"
         style="@style/ChatMessageText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/chat_message_side_margin"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Привет. Кто здесь? Я в чате? У меня всё хорошо, я проверяю высоту чата." />

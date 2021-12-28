@@ -4,7 +4,7 @@ import com.senla.chat.di.terms.TermsModule
 import com.senla.chat.presentation.fragments.chat.ChatFragment
 import dagger.Subcomponent
 
-@Subcomponent(modules = [TermsModule::class])
+@Subcomponent(modules = [ChatModule::class])
 interface ChatComponent {
 
     @Subcomponent.Factory

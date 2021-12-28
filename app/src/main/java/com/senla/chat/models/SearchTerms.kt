@@ -2,24 +2,25 @@ package com.senla.chat.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.renderscript.ScriptIntrinsicYuvToRGB
 
 data class SearchTerms(
-    var yourGender: Gender,
-    var yourAge: Array<Int>,
-    var otherPersonGender: Gender,
-    var otherPersonAge: Array<Int>
+    var yourGender: String,
+    var yourAge: Int,
+    var otherPersonGender: String,
+    var otherPersonAge: Int
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readSerializable() as Gender ,
-        parcel.readArray(Int::class.java.classLoader) as Array<Int>,
-        parcel.readSerializable() as Gender,
-        parcel.readArray(Int::class.java.classLoader) as Array<Int>
+        parcel.readString().toString(),
+        parcel.readInt(),
+        parcel.readString().toString(),
+        parcel.readInt()
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeSerializable(yourGender)
-        parcel.writeSerializable(otherPersonGender)
+        parcel.writeString(yourGender)
+        parcel.writeString(otherPersonGender)
     }
 
     override fun describeContents(): Int {
