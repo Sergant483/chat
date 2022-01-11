@@ -1,16 +1,34 @@
 package com.senla.chat.presentation.fragments.chat
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.senla.chat.models.ChatState
 import com.senla.chat.models.SearchTerms
 import com.senla.chat.models.User
 import com.senla.chat.presentation.fragments.utils.PreferenceManager
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(private val database: FirebaseFirestore) : ViewModel() {
-    val receivedUser = MutableLiveData<User>()
+    private val _receivedUser = MutableLiveData<User>()
+    val receivedUser:LiveData<User> = _receivedUser
+
+    private val _chatState = MutableLiveData<ChatState>(ChatState.NONE)
+    val chatState:LiveData<ChatState> = _chatState
+
+    fun doChatStateLoading(){
+        _chatState.value = ChatState.LOADING
+    }
+
+    fun doChatStateError(){
+        _chatState.value = ChatState.ERROR
+    }
+
+    fun doChatStateDialog(){
+        _chatState.value = ChatState.DIALOG
+    }
 
     fun sendYourUserData(searchTerms: SearchTerms, preferenceManager: PreferenceManager) {
         val userMap: HashMap<String, Any> = hashMapOf()
@@ -46,7 +64,7 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
                         Log.d("VIEWMODEL", user.toString() + "DSHFAHDFKHKDHSHf")
                     }
                 }
-                receivedUser.value = sort(users, searchTerms).random()
+                _receivedUser.value = sort(users, searchTerms).random()
             }
     }
 

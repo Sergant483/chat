@@ -1,4 +1,4 @@
-package com.senla.chat.model
+package com.senla.chat.models
 
 import java.util.*
 

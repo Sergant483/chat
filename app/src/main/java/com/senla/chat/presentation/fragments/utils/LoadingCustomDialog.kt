@@ -2,18 +2,12 @@ package com.senla.chat.presentation.fragments.utils
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
-import android.content.Context
 import android.widget.TextView
 import android.widget.Toast
 import com.senla.chat.R
 
-
-
-
-
 class LoadingCustomDialog(private val mActivity: Activity) {
-    private lateinit var isDialog: AlertDialog
+    private var isDialog: AlertDialog? = null
 
     fun startLoading() {
         val inflater = mActivity.layoutInflater
@@ -24,22 +18,26 @@ class LoadingCustomDialog(private val mActivity: Activity) {
         builder.setView(dialogView)
         builder.setCancelable(false)
         isDialog = builder.create()
-        isDialog.show()
+        isDialog?.show()
 
-        val dialogButton1: TextView = isDialog.findViewById(R.id.tv_change_choice)
-        dialogButton1.setOnClickListener{
-            Toast.makeText(mActivity.applicationContext, "Нажал изменить критерии", Toast.LENGTH_SHORT).show()
-            isDialog.dismiss()
+        val dialogButton1: TextView? = isDialog?.findViewById(R.id.tv_change_choice)
+        dialogButton1?.setOnClickListener {
+            Toast.makeText(
+                mActivity.applicationContext,
+                "Нажал изменить критерии",
+                Toast.LENGTH_SHORT
+            ).show()
+            isDialog?.dismiss()
         }
 
-        val dialogButton2: TextView = isDialog.findViewById(R.id.tv_repeat)
-        dialogButton2.setOnClickListener{
+        val dialogButton2: TextView? = isDialog?.findViewById(R.id.tv_repeat)
+        dialogButton2?.setOnClickListener {
             Toast.makeText(mActivity.applicationContext, "Повтор", Toast.LENGTH_SHORT).show()
-            isDialog.dismiss()
+            isDialog?.dismiss()
         }
     }
 
     fun isDismiss() {
-        isDialog.dismiss()
+        isDialog?.dismiss()
     }
 }

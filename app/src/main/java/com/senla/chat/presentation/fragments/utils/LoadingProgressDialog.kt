@@ -5,7 +5,7 @@ import android.app.AlertDialog
 import com.senla.chat.R
 
 class LoadingProgressDialog(private val mActivity: Activity) {
-    private lateinit var isDialog: AlertDialog
+    private var isDialog: AlertDialog? = null
 
     fun startLoading() {
         val inflater = mActivity.layoutInflater
@@ -15,10 +15,10 @@ class LoadingProgressDialog(private val mActivity: Activity) {
         builder.setView(dialogView)
         builder.setCancelable(false)
         isDialog = builder.create()
-        isDialog.show()
+        isDialog?.show()
     }
 
     fun isDismiss() {
-        isDialog.dismiss()
+        isDialog?.dismiss()
     }
 }

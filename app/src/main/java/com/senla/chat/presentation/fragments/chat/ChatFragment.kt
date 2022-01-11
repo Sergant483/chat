@@ -16,31 +16,36 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.senla.chat.App
 import com.senla.chat.databinding.FragmentChatBinding
-import com.senla.chat.model.ChatMessage
+import com.senla.chat.models.ChatMessage
+import com.senla.chat.models.ChatState
 import com.senla.chat.models.SearchTerms
 import com.senla.chat.models.User
 import com.senla.chat.presentation.adapters.ChatRecyclerViewAdapter
 import com.senla.chat.presentation.decorators.ChatRecyclerViewDecorator
 import com.senla.chat.presentation.fragments.terms.TermsFragment
+import com.senla.chat.presentation.fragments.utils.LoadingCustomDialog
+import com.senla.chat.presentation.fragments.utils.LoadingProgressDialog
 import com.senla.chat.presentation.fragments.utils.PreferenceManager
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.Comparator
-import kotlin.collections.HashMap
 
 class ChatFragment : Fragment() {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<ChatViewModel> { viewModelFactory }
-    private var chatAdapter =  ChatRecyclerViewAdapter(emptyList(),"")
+    private var chatAdapter = ChatRecyclerViewAdapter(emptyList(), "")
     private val chatMessages: MutableList<ChatMessage> = mutableListOf()
     private val preferenceManager by lazy { PreferenceManager(requireContext()) }
+    private val loadingCustomDialog by lazy { LoadingCustomDialog(requireActivity()) }
+    private val loadingProgressDialog by lazy { LoadingProgressDialog(requireActivity()) }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var database: FirebaseFirestore
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,18 +64,21 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initClickListeners()
+        initRV()
+        initObservers()
         val arguments = arguments?.getParcelable<SearchTerms>(TermsFragment.SEARCH_TERMS_BUNDLE_KEY)
         if (arguments != null) {
-            viewModel.sendYourUserData(arguments,preferenceManager)
+            viewModel.doChatStateLoading()
+            viewModel.sendYourUserData(arguments, preferenceManager)
             viewModel.loadReceiverUser(arguments)
             viewModel.receivedUser.observe(viewLifecycleOwner, Observer {
                 listenMessages(it)
                 sendMessage(it)
+                viewModel.doChatStateDialog()
             })
         }
-        initRV()
-
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -78,7 +86,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun initRV() {
-        chatAdapter = ChatRecyclerViewAdapter(listOf(),preferenceManager.getString(KEY_USER_ID))
+        chatAdapter = ChatRecyclerViewAdapter(listOf(), preferenceManager.getString(KEY_USER_ID))
         context?.let {
             binding.rvChat.apply {
                 layoutManager = LinearLayoutManager(it)
@@ -147,11 +155,31 @@ class ChatFragment : Fragment() {
         return SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date)
     }
 
-    private fun initClickListeners(){
+    private fun initClickListeners() {
         binding.buttonSend.setOnClickListener {
             viewModel.receivedUser.value?.let { it -> sendMessage(it) }
         }
     }
+
+    private fun initObservers() {
+        viewModel.chatState.observe(viewLifecycleOwner, {
+            when (it) {
+                ChatState.LOADING -> {
+                    loadingProgressDialog.startLoading()
+                    loadingCustomDialog.isDismiss()
+                }
+                ChatState.ERROR -> {
+                    loadingCustomDialog.startLoading()
+                    loadingProgressDialog.isDismiss()
+                }
+                ChatState.DIALOG -> {
+                    loadingCustomDialog.isDismiss()
+                    loadingProgressDialog.isDismiss()
+                }
+            }
+        })
+    }
+
 
     companion object {
         const val KEY_COLLECTION_USERS = "users"

@@ -6,8 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.senla.chat.R
-import com.senla.chat.model.ChatMessage
-import com.senla.chat.model.ChatMessag
+import com.senla.chat.models.ChatMessage
 
 class ChatRecyclerViewAdapter(
     var messages: List<ChatMessage> = listOf(),
