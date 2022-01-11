@@ -12,6 +12,8 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(private val database: FirebaseFirestore) : ViewModel() {
     val receivedUser = MutableLiveData<User>()
 
+    private var idUserInDb: String = ""
+
     fun sendYourUserData(searchTerms: SearchTerms, preferenceManager: PreferenceManager) {
         val userMap: HashMap<String, Any> = hashMapOf()
         val userId = (0..Int.MAX_VALUE).random().toString()
@@ -22,11 +24,14 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
             .add(userMap)
             .addOnSuccessListener { documentReference ->
                 preferenceManager.putString(ChatFragment.KEY_USER_ID, userId.toString())
-                Log.d("VIEWMODEL", documentReference.toString())
+                idUserInDb = documentReference.id
+                preferenceManager.putString(KEY_USER_ID_IN_DB, idUserInDb)
+                Log.d("VIEWMODEL", "idUserInDb: " + idUserInDb.toString())
             }
             .addOnFailureListener { exception ->
                 Log.d("VIEWMODEL", exception.toString())
             }
+
     }
 
     fun loadReceiverUser(searchTerms: SearchTerms) {
@@ -48,6 +53,7 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
                 }
                 receivedUser.value = sort(users, searchTerms).random()
             }
+
     }
 
     private fun sort(userArray: ArrayList<User>, searchTerms: SearchTerms): ArrayList<User> {
@@ -59,11 +65,20 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
         return sortUserArray
     }
 
+    fun deleteUser(){
+        database.collection(KEY_COLLECTION_USERS)
+            .document(idUserInDb)
+            .delete()
+            .addOnSuccessListener { Log.d("VIEWMODEL", "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener {  e -> Log.d("VIEWMODEL", "Error deleting document", e) }
+    }
+
     companion object {
         const val KEY_COLLECTION_USERS = "user"
         const val KEY_YOUR_GENDER = "your_gender"
         const val KEY_YOUR_AGE = "your_age"
         const val KEY_YOUR_ID = "your_id"
+        const val KEY_USER_ID_IN_DB = "user_id_in_db"
         const val KEY_OTHER_AGE = "other_age"
     }
 }
