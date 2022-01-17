@@ -1,14 +1,19 @@
 package com.senla.chat.presentation.fragments.chat
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -26,6 +31,9 @@ import com.senla.chat.presentation.fragments.terms.TermsFragment
 import com.senla.chat.presentation.fragments.utils.LoadingCustomDialog
 import com.senla.chat.presentation.fragments.utils.LoadingProgressDialog
 import com.senla.chat.presentation.fragments.utils.PreferenceManager
+import com.senla.chat.service.CloseService
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -38,8 +46,8 @@ class ChatFragment : Fragment() {
     private var chatAdapter = ChatRecyclerViewAdapter(emptyList(), "")
     private val chatMessages: MutableList<ChatMessage> = mutableListOf()
     private val preferenceManager by lazy { PreferenceManager(requireContext()) }
-    private val loadingCustomDialog by lazy { LoadingCustomDialog(requireActivity()) }
-    private val loadingProgressDialog by lazy { LoadingProgressDialog(requireActivity()) }
+    private val loadingCustomDialog by lazy { LoadingCustomDialog(requireActivity(),findNavController()) }
+    private val loadingProgressDialog by lazy { LoadingProgressDialog(requireActivity(),findNavController()) }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -63,6 +71,7 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("TAGG","onViewCreated")
         initClickListeners()
         initRV()
         initObservers()
@@ -70,13 +79,30 @@ class ChatFragment : Fragment() {
         if (arguments != null) {
             viewModel.doChatStateLoading()
             viewModel.sendYourUserData(arguments, preferenceManager)
-            viewModel.loadReceiverUser(arguments)
-            viewModel.receivedUser.observe(viewLifecycleOwner, Observer {
-                listenMessages(it)
-                sendMessage(it)
-                viewModel.doChatStateDialog()
-            })
+            var userFinded = true
+            lifecycleScope.launch {
+                while (userFinded) {
+                    Log.d("TAGG"," delay(2000L)")
+                    viewModel.loadReceiverUser(arguments)
+                    delay(2000L)
+                    Log.d("TAGG","viewModel.loadReceiverUser(arguments)")
+                    if (viewModel.receivedUser.value != null) {
+                        userFinded = false
+                        Log.d("TAGG","userFinded = false")
+                        Log.d("TAGG","${viewModel.receivedUser.value}")
+                        viewModel.loadReceiverUser(arguments)
+                    }
+                }
+            }
+                viewModel.receivedUser.observe(viewLifecycleOwner, Observer {
+                        listenMessages(it)
+                        sendMessage(it)
+                    Log.d("TAGG","listenMessages(it) sendMessage(it)")
+                    viewModel.doChatStateDialog()
+                })
+
         }
+        //Log.d("TAGG", preferenceManager.getString(ChatViewModel.KEY_USER_ID_IN_DB))
     }
 
 
@@ -134,6 +160,7 @@ class ChatFragment : Fragment() {
                     )
                     chatMessages.add(chatMessage)
                     chatAdapter.updateMessagesList(chatMessages)
+                    viewModel.doSearchStateFalse()
                 }
             }
             Collections.sort(
@@ -158,10 +185,15 @@ class ChatFragment : Fragment() {
     private fun initClickListeners() {
         binding.buttonSend.setOnClickListener {
             viewModel.receivedUser.value?.let { it -> sendMessage(it) }
-        }
+            }
     }
 
     private fun initObservers() {
+        viewModel.userId.observe(viewLifecycleOwner, {
+            val serviceIntent =
+                Intent(requireContext().applicationContext, CloseService::class.java)
+            ContextCompat.startForegroundService(requireActivity().baseContext, serviceIntent)
+        })
         viewModel.chatState.observe(viewLifecycleOwner, {
             when (it) {
                 ChatState.LOADING -> {
@@ -182,16 +214,7 @@ class ChatFragment : Fragment() {
 
 
     companion object {
-        const val KEY_COLLECTION_USERS = "users"
-        const val KEY_NAME = "name"
-        const val KEY_EMAIL = "email"
-        const val KEY_PASSWORD = "password"
-        const val KEY_PREFERENCE_NAME = "chatAppPreference"
-        const val KEY_IS_SIGNED_ID = "isSignedIn"
         const val KEY_USER_ID = "userId"
-        const val KEY_IMAGE = "image"
-        const val KEY_FCM_TOKEN = "fcmToken"
-        const val KEY_USER = "user"
         const val KEY_COLLECTION_CHAT = "chat"
         const val KEY_SENDER_ID = "senderId"
         const val KEY_RECEIVER_ID = "receiverId"

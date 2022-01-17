@@ -1,40 +1,40 @@
 package com.senla.chat.presentation
 
-import android.app.Dialog
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
 import com.senla.chat.R
-import com.senla.chat.presentation.fragments.utils.LoadingCustomDialog
-import com.senla.chat.presentation.fragments.utils.LoadingProgressDialog
+import com.senla.chat.service.CloseService
+
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var loadingCustomDialog: LoadingCustomDialog
-    private lateinit var loadingProgressDialog: LoadingProgressDialog
-
+    private val navController
+        get() =
+            (supportFragmentManager.findFragmentById(findViewById<View>(R.id.nav_host_fragment).id) as NavHostFragment).navController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-//        loadingProgressDialog()
-//        loadingCustomDialog()
-
-
-
     }
 
-
-    private fun loadingCustomDialog(){
-        loadingCustomDialog = LoadingCustomDialog(this)
-        loadingCustomDialog.startLoading()
+    override fun onDestroy() {
+        stopService()
+        super.onDestroy()
     }
 
-    private fun loadingProgressDialog(){
-        loadingProgressDialog = LoadingProgressDialog(this)
-        loadingProgressDialog.startLoading()
+    override fun onBackPressed() {
+        if (navController.currentDestination?.id == R.id.chatFragment) {
+           stopService()
+        }
+        super.onBackPressed()
+    }
+
+    private fun stopService(){
+        Intent(this, CloseService::class.java).also { intent ->
+            this.stopService(intent)
+        }
     }
 
 }

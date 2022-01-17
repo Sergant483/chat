@@ -4,7 +4,9 @@ import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
 import com.senla.chat.di.chat.ChatComponent
 import com.senla.chat.di.terms.TermsComponent
+import com.senla.chat.presentation.MainActivity
 import com.senla.chat.presentation.fragments.utils.PreferenceManager
+import com.senla.chat.service.CloseService
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -28,6 +30,7 @@ interface ApplicationComponent {
 
     fun termsComponent(): TermsComponent.Factory
     fun chatComponent(): ChatComponent.Factory
+    fun inject(service: CloseService)
 
     @Module
     class AppModule {

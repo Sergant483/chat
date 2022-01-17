@@ -2,9 +2,12 @@ package com.senla.chat.presentation.fragments.utils
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import androidx.navigation.NavController
 import com.senla.chat.R
+import com.senla.chat.service.CloseService
 
-class LoadingProgressDialog(private val mActivity: Activity) {
+class LoadingProgressDialog(private val mActivity: Activity,private val navController: NavController) {
     private var isDialog: AlertDialog? = null
 
     fun startLoading() {
@@ -13,7 +16,13 @@ class LoadingProgressDialog(private val mActivity: Activity) {
 
         val builder = AlertDialog.Builder(mActivity)
         builder.setView(dialogView)
-        builder.setCancelable(false)
+        builder.setCancelable(true)
+        builder.setOnCancelListener {
+            navController.navigate(R.id.termsFragment)
+            Intent(mActivity, CloseService::class.java).also { intent ->
+                mActivity.stopService(intent)
+            }
+        }
         isDialog = builder.create()
         isDialog?.show()
     }
