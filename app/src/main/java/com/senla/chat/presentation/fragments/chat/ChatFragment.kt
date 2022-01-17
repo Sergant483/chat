@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -46,8 +47,18 @@ class ChatFragment : Fragment() {
     private var chatAdapter = ChatRecyclerViewAdapter(emptyList(), "")
     private val chatMessages: MutableList<ChatMessage> = mutableListOf()
     private val preferenceManager by lazy { PreferenceManager(requireContext()) }
-    private val loadingCustomDialog by lazy { LoadingCustomDialog(requireActivity(),findNavController()) }
-    private val loadingProgressDialog by lazy { LoadingProgressDialog(requireActivity(),findNavController()) }
+    private val loadingCustomDialog by lazy {
+        LoadingCustomDialog(
+            requireActivity(),
+            findNavController()
+        )
+    }
+    private val loadingProgressDialog by lazy {
+        LoadingProgressDialog(
+            requireActivity(),
+            findNavController()
+        )
+    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -71,7 +82,7 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("TAGG","onViewCreated")
+        Log.d("TAGG", "onViewCreated")
         initClickListeners()
         initRV()
         initObservers()
@@ -82,24 +93,24 @@ class ChatFragment : Fragment() {
             var userFinded = true
             lifecycleScope.launch {
                 while (userFinded) {
-                    Log.d("TAGG"," delay(2000L)")
+                    Log.d("TAGG", " delay(2000L)")
                     viewModel.loadReceiverUser(arguments)
-                    delay(2000L)
-                    Log.d("TAGG","viewModel.loadReceiverUser(arguments)")
+                    delay(1000L)
+                    Log.d("TAGG", "viewModel.loadReceiverUser(arguments)")
                     if (viewModel.receivedUser.value != null) {
                         userFinded = false
-                        Log.d("TAGG","userFinded = false")
-                        Log.d("TAGG","${viewModel.receivedUser.value}")
+                        Log.d("TAGG", "userFinded = false")
+                        Log.d("TAGG", "${viewModel.receivedUser.value}")
                         viewModel.loadReceiverUser(arguments)
                     }
                 }
             }
-                viewModel.receivedUser.observe(viewLifecycleOwner, Observer {
-                        listenMessages(it)
-                        sendMessage(it)
-                    Log.d("TAGG","listenMessages(it) sendMessage(it)")
-                    viewModel.doChatStateDialog()
-                })
+            viewModel.receivedUser.observe(viewLifecycleOwner, Observer {
+                listenMessages(it)
+                sendMessage(it)
+                Log.d("TAGG", "listenMessages(it) sendMessage(it)")
+                viewModel.doChatStateDialog()
+            })
 
         }
         //Log.d("TAGG", preferenceManager.getString(ChatViewModel.KEY_USER_ID_IN_DB))
@@ -107,6 +118,7 @@ class ChatFragment : Fragment() {
 
 
     override fun onDestroyView() {
+        viewModel.doChatStateNone()
         _binding = null
         super.onDestroyView()
     }
@@ -130,6 +142,7 @@ class ChatFragment : Fragment() {
         message.put(KEY_TIMESTAMP, Date())
         database.collection(KEY_COLLECTION_CHAT).add(message)
         binding.inputMessage.setText(null)
+        viewModel.getOnlineReceiverById(receiverUser.id)
     }
 
     private fun listenMessages(receiverUser: User) {
@@ -147,7 +160,7 @@ class ChatFragment : Fragment() {
         if (error != null) {
             return@EventListener
         }
-        if (value != null) {
+        if (value != null && viewModel.chatState.value != ChatState.NONE) {
             val documentChange = value.documentChanges
             documentChange.forEach { it ->
                 if (it.type == DocumentChange.Type.ADDED) {
@@ -185,7 +198,7 @@ class ChatFragment : Fragment() {
     private fun initClickListeners() {
         binding.buttonSend.setOnClickListener {
             viewModel.receivedUser.value?.let { it -> sendMessage(it) }
-            }
+        }
     }
 
     private fun initObservers() {
@@ -209,6 +222,9 @@ class ChatFragment : Fragment() {
                     loadingProgressDialog.isDismiss()
                 }
             }
+        })
+        viewModel.receivedUserOnline.observe(viewLifecycleOwner, {
+            binding.online.isVisible = it == false
         })
     }
 

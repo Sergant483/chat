@@ -19,4 +19,5 @@
     <string name="loading_custom_dialog_heading_text_view">ОШИБКА!</string>
     <string name="loading_custom_progress_text_view">Подождите, \nидет поиск собеседника</string>
     <string name="type_a_message">Type a message</string>
+    <string name="receiver_user_not_online">Собеседник вышел из чата</string>
 </resources>

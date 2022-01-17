@@ -19,6 +19,9 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
     private val _receivedUser = MutableLiveData<User>()
     val receivedUser: LiveData<User> = _receivedUser
 
+    private val _receivedUserOnline = MutableLiveData<Boolean>(true)
+    val receivedUserOnline: LiveData<Boolean> = _receivedUserOnline
+
     private val _userId = MutableLiveData<String>()
     val userId: LiveData<String> = _userId
 
@@ -29,7 +32,8 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
         viewModelScope.launch {
             _chatState.value = ChatState.LOADING
             delay(20_000L)
-            doChatStateError()
+            if (_chatState.value == ChatState.LOADING)
+                doChatStateError()
         }
     }
 
@@ -39,6 +43,10 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
 
     fun doChatStateDialog() {
         _chatState.value = ChatState.DIALOG
+    }
+
+    fun doChatStateNone() {
+        _chatState.value = ChatState.NONE
     }
 
     private var idUserInDb: String = ""
@@ -64,7 +72,6 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
             .addOnFailureListener { exception ->
                 Log.d("VIEWMODEL", exception.toString())
             }
-
     }
 
     fun loadReceiverUser(searchTerms: SearchTerms) {
@@ -92,6 +99,31 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
             }
     }
 
+    fun getOnlineReceiverById(receiverID: String) {
+        val users: ArrayList<User> = arrayListOf()
+        database.collection(KEY_COLLECTION_USERS)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null) {
+                    val queryDocumentSnapShot = task.result
+                    queryDocumentSnapShot?.forEach {
+                        val user = User(
+                            id = it.getString(KEY_YOUR_ID).toString(),
+                            age = it.getString(KEY_YOUR_AGE)!!.toInt(),
+                            gender = it.getString(KEY_YOUR_GENDER)!!,
+                            inSearch = it.getLong(KEY_YOUR_ONLINE)!!
+                        )
+                        users.add(user)
+                    }
+                }
+                var online = false
+                users.forEach { user ->
+                    if (user.id == receiverID) online = true
+                }
+                _receivedUserOnline.value = online
+            }
+    }
+
     private fun sort(userArray: ArrayList<User>, searchTerms: SearchTerms): ArrayList<User> {
         val sortUserArray = arrayListOf<User>()
         userArray.forEach {
@@ -104,12 +136,15 @@ class ChatViewModel @Inject constructor(private val database: FirebaseFirestore)
     }
 
     fun doSearchStateFalse() {
-        val documentReference: DocumentReference =
-            database.collection(KEY_COLLECTION_USERS)
-                .document(yourId)
-        documentReference.update(
-            KEY_YOUR_ONLINE, 0
-        )
+        viewModelScope.launch {
+            delay(1_000L)
+            val documentReference: DocumentReference =
+                database.collection(KEY_COLLECTION_USERS)
+                    .document(yourId)
+            documentReference.update(
+                KEY_YOUR_ONLINE, 0
+            )
+        }
     }
 
 
